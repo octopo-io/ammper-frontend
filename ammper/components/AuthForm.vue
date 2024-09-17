@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { ErrorType } from '~/types/auth-response';
+
 const props = defineProps<{
   mode: 'register' | 'login';
-  error?: 'user_not_found' | 'invalid_password';
+  error?: ErrorType;
   loading: boolean;
 }>();
 
@@ -19,6 +21,7 @@ const emit = defineEmits(['submit']);
 const errors = {
   user_not_found: 'Email no registrado.',
   invalid_password: 'Contraseña incorrecta.',
+  user_already_exists: 'Email ya registrado.',
 };
 </script>
 
