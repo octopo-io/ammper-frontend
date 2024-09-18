@@ -13,6 +13,11 @@ const transactions = ref<Array<Object> | undefined>(undefined);
 const belvoStore = useBelvoStore();
 
 onMounted(async () => {
+  await getTransactions();
+});
+
+const getTransactions = async () => {
+  loading.value = true;
   const {status, response} = await belvoStore.getTransactions(name, account);
   if (!status) {
     error.value = response;
@@ -24,7 +29,7 @@ onMounted(async () => {
     });
   }
   loading.value = false;
-});
+};
 
 const balance = computed(() => {
   if (transactions.value) {
