@@ -69,7 +69,12 @@ const handleClick = (accountID: string) => {
     <div v-if="error">
       <v-alert type="error">
         Error desde la API:
-        {{ error[0].message }}
+        <template v-if="Array.isArray(error)">
+          {{ error[0].message }}
+        </template>
+        <template v-else>
+          {{ error}}
+        </template>
       </v-alert>
     </div>
     <div v-if="!loading && account">
