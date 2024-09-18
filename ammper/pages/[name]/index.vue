@@ -2,9 +2,14 @@
 import type { ErrorResponse } from '~/types/account';
 import { useBelvoStore } from '~/store/belvo';
 
+useHead({
+  title: 'Detalle Institución',
+});
+
 const route = useRoute();
 const name = route.params.name as string;
 const error = ref<ErrorResponse[] | undefined>(undefined);
+const loading = ref<boolean>(true);
 
 const belvoStore = useBelvoStore();
 const {account} = storeToRefs(belvoStore);
@@ -15,14 +20,21 @@ onMounted(async () => {
   if (!status) {
     error.value = response as ErrorResponse[];
   }
+  loading.value = false;
 });
 onUnmounted(() => {
   account.value = null;
 });
+
+const handleClick = (accountID: string) => {
+  navigateTo(`/${ name }/${ accountID }`);
+};
 </script>
 
 <template>
   <v-container>
+    <v-skeleton-loader v-if="loading" type="table-tbody"/>
+
     <div v-if="error">
       <v-alert type="error">
         Error desde la API:
@@ -40,7 +52,7 @@ onUnmounted(() => {
         <tbody>
         <tr v-for="item in account.results">
           <td>{{ item.name }} N° {{ item.number }}</td>
-          <td>
+          <td class="cursor-pointer" @click="handleClick(item.id)">
             Ver
             <v-icon>mdi-eye-outline</v-icon>
           </td>

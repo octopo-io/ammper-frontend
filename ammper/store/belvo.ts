@@ -66,6 +66,35 @@ export const useBelvoStore = defineStore('belvo', {
           response: e.data
         };
       }
+    },
+    async getTransactions(institution: string, accountID: string) {
+      const config = useRuntimeConfig();
+      const token = useCookie('token');
+      try {
+        const response = await $fetch<AccountsResponse>(config.public.BASE_URL, {
+          method: 'get',
+          query: {
+            controller: 'belvo',
+            action: 'get_transactions',
+            institution,
+            account_id: accountID
+          },
+          headers: {
+            Authorization: `JWT ${ token.value }`,
+          },
+        });
+        console.log(response)
+        return {
+          status: true,
+          response
+        };
+      } catch (e: any) {
+        console.error(e);
+        return {
+          status: false,
+          response: e.data
+        };
+      }
     }
   },
 });
